@@ -1,0 +1,46 @@
+---
+- name: Initialize Raspberry Pi
+  hosts: raspberry_pi_nas
+  become: yes
+  tasks:
+    - name: Check if 'dtparam=pciex1' exists in config.txt
+      ansible.builtin.lineinfile:
+        path: /boot/firmware/config.txt
+        line: dtparam=pciex1
+        create: yes
+        state: present
+      register: config_modified
+
+    - name: Reboot the Raspberry Pi
+      ansible.builtin.reboot:
+        msg: "Rebooting after configuration change"
+        reboot_timeout: 300
+        test_command: uptime
+      when: config_modified.changed
+
+    - name: Wait for the Raspberry Pi to become available
+      ansible.builtin.wait_for_connection:
+        delay: 60
+        timeout: 300
+
+    - name: Display output of lsblk
+      ansible.builtin.command: lsblk
+      register: lsblk_output
+
+    - name: Debug output of lsblk
+      ansible.builtin.debug:
+        msg: "{{ lsblk_output.stdout }}"
+
+    - name: Display output of lspci
+      ansible.builtin.command: lspci
+      register: lspci_output
+
+    - name: Debug output of lspci
+      ansible.builtin.debug:
+        msg: "{{ lspci_output.stdout }}"
+    
+    # - name: Install systemd-resolved"
+    #   shell: "sudo apt install systemd-resolved"
+
+    # - name: Install NextCloudPi
+    #   shell: "sudo apt-get install curl && curl -sSL https://raw.githubusercontent.com/nextcloud/nextcloudpi/master/install.sh | bash"
