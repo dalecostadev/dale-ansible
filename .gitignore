@@ -35,4 +35,4 @@ override.tf.json
 .terraformrc
 terraform.rc
 
-src/rasberry_pi/nas/inventory/group_vars/vars.yml
+src/raspberry_pi/nas/inventory/group_vars/vars.yml
