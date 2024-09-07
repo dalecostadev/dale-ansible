@@ -38,9 +38,3 @@
     - name: Debug output of lspci
       ansible.builtin.debug:
         msg: "{{ lspci_output.stdout }}"
-    
-    # - name: Install systemd-resolved"
-    #   shell: "sudo apt install systemd-resolved"
-
-    # - name: Install NextCloudPi
-    #   shell: "sudo apt-get install curl && curl -sSL https://raw.githubusercontent.com/nextcloud/nextcloudpi/master/install.sh | bash"
